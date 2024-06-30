@@ -43,4 +43,10 @@ class Controller:
 
 
     def handle_path(self, e):
-        pass
+        soluzione, lunghezza=self._model.getBestPaht()
+        self._view.txt_result.controls.append(ft.Text(f"Il percorso migliore ha lunghezza {lunghezza}"))
+        for nodi in soluzione:
+            self._view.txt_result.controls.append(
+                ft.Text(f"Prodotto {nodi.Product_number}  Ricavo={self._model.dict[nodi.Product_number]}"))
+        self._view.update_page()
+

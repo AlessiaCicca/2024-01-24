@@ -1,3 +1,5 @@
+import copy
+
 import networkx as nx
 
 from database.DAO import DAO
@@ -52,6 +54,41 @@ class Model:
                 count+=1
                 redditizi.append((nodo,dizio[nodo],self.dict[nodo.Product_number]))
         return redditizi
+
+
+
+
+
+    def getBestPaht(self):
+        self._solBest = []
+        self._costBest = 0
+        parziale = []
+        for v in self.grafo.nodes:
+            parziale.append(v)
+            self.ricorsione(parziale)
+            parziale.pop()
+        return self._solBest, self._costBest
+
+    def ricorsione(self, parziale):
+        # Controllo se parziale è una sol valida, ed in caso se è migliore del best
+        if len(parziale) > self._costBest:
+            if self.accettabile(parziale):
+                self._costBest = len(parziale)
+                self._solBest = copy.deepcopy(parziale)
+
+        for v in self.grafo.neighbors(parziale[-1]):
+            if v not in parziale:
+                parziale.append(v)
+                self.ricorsione(parziale)
+                parziale.pop()
+    def accettabile(self,lista):
+        okay=True
+        if self.grafo.in_degree(lista[0])>0:
+            okay=False
+        if self.grafo.out_degree(lista[-1])>0:
+            okay=False
+        return okay
+
 
 
 
